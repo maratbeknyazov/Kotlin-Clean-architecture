@@ -4,4 +4,8 @@
 local.properties
 **/build/
 *.iml
+.project
+.classpath
+.factorypath
+.settings/
 
