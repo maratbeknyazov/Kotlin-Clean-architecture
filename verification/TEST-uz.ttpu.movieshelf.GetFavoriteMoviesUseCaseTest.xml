@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="uz.ttpu.movieshelf.GetFavoriteMoviesUseCaseTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-08T11:24:55" hostname="ALBERT" time="0.008">
+  <properties/>
+  <testcase name="no_favorites_returns_empty_list" classname="uz.ttpu.movieshelf.GetFavoriteMoviesUseCaseTest" time="0.004"/>
+  <testcase name="only_favorites_remain_sorted_and_cache_flag_is_preserved" classname="uz.ttpu.movieshelf.GetFavoriteMoviesUseCaseTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

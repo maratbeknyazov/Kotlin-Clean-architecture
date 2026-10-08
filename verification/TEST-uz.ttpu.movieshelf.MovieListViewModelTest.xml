@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="uz.ttpu.movieshelf.MovieListViewModelTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-08T11:24:55" hostname="ALBERT" time="0.151">
+  <properties/>
+  <testcase name="removing_favorite_hides_movie_immediately_and_filter_can_be_disabled" classname="uz.ttpu.movieshelf.MovieListViewModelTest" time="0.143"/>
+  <testcase name="favorite_updates_without_network_reload" classname="uz.ttpu.movieshelf.MovieListViewModelTest" time="0.003"/>
+  <testcase name="retry_after_network_error_loads_movies" classname="uz.ttpu.movieshelf.MovieListViewModelTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
