@@ -31,22 +31,30 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import uz.ttpu.movieshelf.domain.usecase.GetFavoriteMoviesUseCase
 import uz.ttpu.movieshelf.domain.usecase.GetMoviesUseCase
 import uz.ttpu.movieshelf.domain.usecase.ToggleFavoriteUseCase
 
 class MovieListViewModel(
     private val getMovies: GetMoviesUseCase,
     private val toggleFavorite: ToggleFavoriteUseCase,
+    private val getFavoriteMovies: GetFavoriteMoviesUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow<MovieListUiState>(MovieListUiState.Loading)
     val state: StateFlow<MovieListUiState> = _state.asStateFlow()
     private var loadJob: Job? = null
+    private var favoritesOnly: Boolean = false
 
     init {
         load()
     }
 
     fun onRefresh() {
+        load()
+    }
+
+    fun onFavoritesOnlyChange(enabled: Boolean) {
+        favoritesOnly = enabled
         load()
     }
 
@@ -60,7 +68,13 @@ class MovieListViewModel(
                 val updatedMovies = current.movies.map { movie ->
                     if (movie.id == movieId) movie.copy(isFavorite = isFavorite) else movie
                 }
-                _state.value = current.copy(movies = updatedMovies)
+                val visibleMovies = if (current.favoritesOnly) {
+                    updatedMovies.filter { it.isFavorite }
+                } else {
+                    updatedMovies
+                }
+                // Обновляем список сразу, без запроса к сети.
+                _state.value = current.copy(movies = visibleMovies)
             }
         }
     }
@@ -69,10 +83,15 @@ class MovieListViewModel(
         // Быстрое повторное Refresh отменяет предыдущую загрузку.
         loadJob?.cancel()
         _state.value = MovieListUiState.Loading
+        val onlyFavorites = favoritesOnly
         loadJob = viewModelScope.launch {
             try {
-                val result = getMovies()
-                _state.value = MovieListUiState.Success(result.movies, result.isFromCache)
+                val result = if (onlyFavorites) getFavoriteMovies() else getMovies()
+                _state.value = MovieListUiState.Success(
+                    movies = result.movies,
+                    isFromCache = result.isFromCache,
+                    favoritesOnly = onlyFavorites,
+                )
             } catch (error: IOException) {
                 _state.value = MovieListUiState.Error(
                     "Can't load movies. Check your connection and try again."

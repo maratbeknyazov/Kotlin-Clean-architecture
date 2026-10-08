@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,6 +37,7 @@ fun MovieListScreen(
     onFavoriteClick: (Int) -> Unit,
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
+    onFavoritesOnlyChange: (Boolean) -> Unit = {},
 ) {
     when (state) {
         MovieListUiState.Loading -> {
@@ -68,6 +70,12 @@ fun MovieListScreen(
                     )
                     TextButton(onClick = onRefresh) { Text("Refresh") }
                 }
+                FilterChip(
+                    selected = state.favoritesOnly,
+                    onClick = { onFavoritesOnlyChange(!state.favoritesOnly) },
+                    label = { Text("Favorites only") },
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
                 if (state.isFromCache) {
                     Surface(
                         color = MaterialTheme.colorScheme.secondaryContainer,
@@ -75,6 +83,9 @@ fun MovieListScreen(
                     ) {
                         Text("Offline — showing saved data", Modifier.padding(16.dp))
                     }
+                }
+                if (state.movies.isEmpty()) {
+                    Text("No movies to show", Modifier.padding(16.dp))
                 }
                 LazyColumn(modifier = Modifier.weight(1f)) {
                     items(state.movies, key = { it.id }) { movie ->

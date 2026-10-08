@@ -35,7 +35,11 @@ class MainActivity : ComponentActivity() {
                 val movieViewModel: MovieListViewModel = viewModel(
                     factory = viewModelFactory {
                         initializer {
-                            MovieListViewModel(container.getMovies, container.toggleFavorite)
+                            MovieListViewModel(
+                                container.getMovies,
+                                container.toggleFavorite,
+                                container.getFavoriteMovies,
+                            )
                         }
                     }
                 )
@@ -62,6 +66,7 @@ class MainActivity : ComponentActivity() {
                             state = state,
                             onFavoriteClick = movieViewModel::onFavoriteClick,
                             onRefresh = movieViewModel::onRefresh,
+                            onFavoritesOnlyChange = movieViewModel::onFavoritesOnlyChange,
                             modifier = Modifier.weight(1f),
                         )
                     }
