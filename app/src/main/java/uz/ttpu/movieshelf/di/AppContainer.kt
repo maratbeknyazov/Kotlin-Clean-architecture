@@ -1,6 +1,7 @@
 package uz.ttpu.movieshelf.di
 
-import uz.ttpu.movieshelf.data.local.InMemoryMovieLocalDataSource
+import android.content.Context
+import uz.ttpu.movieshelf.data.local.SharedPrefsMovieLocalDataSource
 import uz.ttpu.movieshelf.data.local.MovieLocalDataSource
 import uz.ttpu.movieshelf.data.remote.FakeMovieRemoteDataSource
 import uz.ttpu.movieshelf.data.repository.MovieRepositoryImpl
@@ -9,9 +10,9 @@ import uz.ttpu.movieshelf.domain.usecase.GetMoviesUseCase
 import uz.ttpu.movieshelf.domain.usecase.ToggleFavoriteUseCase
 
 // Все конкретные зависимости создаются в одном месте.
-class AppContainer {
+class AppContainer(context: Context) {
     val fakeRemote = FakeMovieRemoteDataSource()
-    private val local: MovieLocalDataSource = InMemoryMovieLocalDataSource()
+    private val local: MovieLocalDataSource = SharedPrefsMovieLocalDataSource(context)
     private val repository: MovieRepository = MovieRepositoryImpl(fakeRemote, local)
 
     val getMovies = GetMoviesUseCase(repository)
